@@ -1,0 +1,177 @@
+-- bruh go away
+if _G.Reanimated ~= true then   
+    
+    
+    
+    local Player = game:GetService("Players").LocalPlayer
+    local Character = Player.Character
+    
+   
+
+    if Character:FindFirstChild("Animate") then
+        Character.Animate.Disabled = true
+    end
+    
+    local function netless()
+        game:GetService("Workspace").FallenPartsDestroyHeight = 0 / 0
+        setfflag("PlayerNoAccessRadius", "False")
+        setfflag("S2NumPhysicsPacketsPerStep", math.huge)
+        setfflag("PhysicsNewConvexDecompositionEnabled", "True")
+        local physicsSettings = settings():GetService("PhysicsSettings")
+        physicsSettings.AllowSleep = false
+        physicsSettings.PhysicsEnvironmentalThrottle = Enum.EnviromentalPhysicsThrottle.Disabled
+        local radius =game:GetService("RunService").Heartbeat:Connect(function()
+            game:GetService("Players").LocalPlayer.MaximumSimulationRadius = 1000
+            sethiddenproperty(game:GetService("Players").LocalPlayer, "SimulationRadius", 1000)
+        end)
+    end
+
+    netless()
+    local hatnameclone = {}
+    for _, v in next, game:FindFirstChildOfClass("Players").LocalPlayer["Character"]:GetChildren() do
+        if v:IsA("Accessory") then
+            if hatnameclone[v.Name] then
+                if hatnameclone[v.Name] == "s" then
+                    hatnameclone[v.Name] = {}
+                end
+                table.insert(hatnameclone[v.Name], v)
+            else
+                hatnameclone[v.Name] = "s"
+            end
+        end
+    end
+    for _, v in pairs(hatnameclone) do
+        if type(v) == "table" then
+            local num = 1
+            for _, w in pairs(v) do
+                w.Name = w.Name .. num
+                num = num + 1
+            end
+        end
+    end
+    hatnameclone = nil
+
+
+    Character.Archivable = true;    local ReanimChar = Character:Clone();    ReanimChar.Parent = Character;    ReanimChar.Name = "Reanimated Character";    game:GetService("Workspace").Camera.CameraSubject = ReanimChar:FindFirstChild("Humanoid");    Character.HumanoidRootPart:Destroy();
+
+   
+    
+    local function Align(P0,P1,P,O)
+    
+    if not P0:IsA("BasePart") then
+        print("error with provided part")
+        return 
+    end    
+    
+    if P0.Parent:IsA("Accessory") then
+        if P0:FindFirstChild("AccessoryWeld") then
+            P0:FindFirstChild("AccessoryWeld"):Destroy() 
+        end    
+    end    
+    
+    local AP = Instance.new("AlignPosition");AP.Parent = P0;AP.MaxForce = 5e9;AP.MaxVelocity = 5e9;AP.Responsiveness = 200;AP.ReactionForceEnabled = false;AP.ApplyAtCenterOfMass = false;AP.RigidityEnabled = false;
+    local AO = Instance.new("AlignOrientation");AO.Parent = P1;AO.Name = P0.Parent.Name; AO.MaxTorque = 5e9;AO.MaxAngularVelocity = 5e9;AO.Responsiveness = 200;AO.PrimaryAxisOnly = false;AO.ReactionTorqueEnabled = false;AO.RigidityEnabled = false;
+    
+    local AT0 = Instance.new("Attachment");AT0.Parent = P0;AT0.Position = P or Vector3.new(0,0,0);
+    local AT1 = Instance.new("Attachment");AT1.Parent = P1;AT1.Orientation = O or Vector3.new(0,0,0);
+    
+    AP.Attachment0 = AT0;AO.Attachment0 = AT0
+    AP.Attachment1 = AT1;AO.Attachment1 = AT1
+    
+    
+    game:GetService("RunService").Heartbeat:Connect(function()
+        game:GetService("Players").LocalPlayer.ReplicationFocus = P0
+        pcall(function()
+            
+                P0.Velocity = Vector3.new(-27.999,0,0)
+        end)
+    end)    
+    
+end   
+    
+    
+    
+    
+    
+    for i, v in pairs(ReanimChar:GetDescendants()) do
+        if v:IsA("BasePart") or v:IsA("Decal")  then
+            v.Transparency = 1
+        end
+    end
+    
+    ReanimChar:FindFirstChild("BoomBox"):Destroy()
+
+    local Noclip
+    function NoclipFunction()
+        for i, v in pairs(Character:GetDescendants()) do
+            if v:IsA("BasePart") then
+                v.CanCollide = false
+            end
+        end
+        for i, v in pairs(Character.Humanoid:GetPlayingAnimationTracks()) do
+            v:Stop()
+        end
+    end
+
+    Noclip = game:GetService("RunService").Stepped:Connect(NoclipFunction)
+
+    local function InstantAlign(P0, P1)
+        Align(Character[P0], ReanimChar[P1])
+    end
+    --// Align parts to fake character
+    
+    if Character.Torso:FindFirstChild("Left Shoulder") then
+    Character.Torso["Left Shoulder"]:Destroy();
+    end
+    if Character.Torso:FindFirstChild("Right Shoulder") then
+    Character.Torso["Right Shoulder"]:Destroy(); 
+    end
+    if Character.Torso:FindFirstChild("Left Hip") then
+    Character.Torso["Left Hip"]:Destroy();
+    end
+    if Character.Torso:FindFirstChild("Right Hip") then
+    Character.Torso["Right Hip"]:Destroy()
+    end
+    
+    InstantAlign("Torso", "Torso");    InstantAlign("Left Arm", "Left Arm");InstantAlign("Right Arm", "Right Arm");    InstantAlign("Left Leg", "Left Leg");InstantAlign("Right Leg", "Right Leg");
+
+    for i, v in pairs(Character:GetChildren()) do
+        if v:IsA("Accessory") then
+            if v.Handle:FindFirstChild("AccessoryWeld") then
+                v.Handle.AccessoryWeld:Destroy()
+                Align(Character[v.Name].Handle, ReanimChar[v.Name].Handle)
+            end
+        end
+    end
+    
+    -- // Set Global Reanimated to true and set Character
+    _G.Reanimated = true;Game:GetService("Players").LocalPlayer.Character = ReanimChar
+    
+    
+game:GetService("Players").LocalPlayer.Character.Humanoid.Died:Connect(function()
+    ReanimChar:Destroy();ReanimChar:BreakJoints();  game.Players.LocalPlayer.Character = game:GetService("Workspace")[game.Players.LocalPlayer.Name];Character:BreakJoints();   _G.Reanimated = false;wait(0.05);game:GetService("Workspace").Camera.CameraSubject = Character.Humanoid
+end)
+    
+
+
+
+
+else
+   local FixBind = Instance.new("BindableFunction")
+    function FixBind.OnInvoke(response)
+        if game:GetService("Workspace")[game.Players.LocalPlayer.Name]:FindFirstChild("Reanimated Character") then
+            game:GetService("Workspace")[game.Players.LocalPlayer.Name]["Reanimated Character"]:BreakJoints()
+            game:GetService("Workspace")[game.Players.LocalPlayer.Name]["Reanimated Character"]:Destroy()
+        end
+
+        game.Players.LocalPlayer.Character = game:GetService("Workspace")[game.Players.LocalPlayer.Name]
+        game.Players.LocalPlayer.Character:BreakJoints()
+        _G.Reanimated = false
+        wait(0.05)
+        game:GetService("Workspace").Camera.CameraSubject = game.Players.LocalPlayer.Character.Humanoid
+    end
+    
+    game.StarterGui:SetCore("SendNotification",{Title = "Error",Text = "You are currently Reanimated!",Callback = FixBind,Button1 = "Reset"})
+    local error_sfx = Instance.new("Sound", workspace);error_sfx.SoundId = "rbxassetid://" .. 550209561; error_sfx.Looped = false;    error_sfx.Volume = 3;    error_sfx:Play();    wait(1);    error_sfx:Destroy();
+    return
+   end
