@@ -99,7 +99,7 @@ end
         end
     end
     
-    ReanimChar:FindFirstChild("BoomBox"):Destroy()
+
 
     local Noclip
     function NoclipFunction()
